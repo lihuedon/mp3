@@ -28,7 +28,7 @@ class FrameApp(Frame):
         self.actual_song = 0
 
         self.b0 = Button(self, text="ADD TO PLAYLIST", command=self.add_to_list, bg='AntiqueWhite1', width=15)
-        self.b0.grid(row=1, column=0)
+        self.b0.grid(row=1, column=0, pady=8)
 
         self.b1 = Button(self, text="PLAY SONG", command=self.play_music, bg='AntiqueWhite1', width=15)
         self.b1.grid(row=2, column=0)
@@ -48,17 +48,24 @@ class FrameApp(Frame):
         self.b6 = Button(self, text="EXIT", command=exit_app, bg='AntiqueWhite1', width=15)
         self.b6.grid(row=7, column=0)
 
-        self.label1 = Label(self, fg='Black', font=('Helvetica 12 bold italic', 10), bg='white')
-        self.label1.grid(row=8, column=0, columnspan=4)
+        self.container_box = Frame(self)
+        self.container_box.grid(row=9, column=0, columnspan=4, padx=8, pady=8)
 
-        self.play_list = Listbox(self, font='Helvetica 10', bg='white', width=60, height=20, selectmode=SINGLE)
-        self.play_list.grid(row=9, column=0, columnspan=4)
+        self.label1 = Label(self, fg='Black', font=('Helvetica 12 bold italic', 10), bg='white', wraplength=380)
+        self.label1.grid(sticky=('n', 's', 'w', 'e'), row=8, column=0, columnspan=4, pady=8)
+
+        self.play_list = Listbox(self.container_box, font='Helvetica 10', bg='white', width=50, height=14, selectmode=SINGLE)
+        self.play_list.pack(side=LEFT, fill=BOTH)
         self.play_list.bind("<<ListboxSelect>>", self.select_song)
+
+        self.scrollbar = Scrollbar(self.container_box)
+        self.scrollbar.pack(side=RIGHT, fill=BOTH)
+
+        self.play_list.config(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.config(command=self.play_list.yview)
 
         # set event to not predefined value in pygame
         self.SONG_END = pygame.USEREVENT + 1
-
-        # TODO: Make progressbar, delete songs from playlist, amplify volume
 
     def add_to_list(self):
         """
@@ -75,8 +82,7 @@ class FrameApp(Frame):
         for key, item in enumerate(self.playlist):
             # appends song to listbox
             song = EasyID3(item)
-            song_data = (str(key + 1) + ' : ' + song['title'][0] + ' - '
-                         + song['artist'][0])
+            song_data = (str(key + 1) + ' : ' + song['title'][0])
             self.play_list.insert(key, song_data)
 
     def now_playing(self):
@@ -85,8 +91,8 @@ class FrameApp(Frame):
         :return: string - current song data
         """
         song = EasyID3(self.playlist[self.actual_song])
-        song_data = "Now playing: " + str(self.actual_song + 1) + " " + \
-                    str(song['title']) + " - " + str(song['artist'])
+        song_data = str(self.actual_song + 1) + " : " + \
+                    str(song['title'][0]) + " - " + str(song['artist'])
         self.play_list.select_clear(0, END)
         self.play_list.select_set(self.actual_song)
         return song_data
@@ -179,7 +185,7 @@ class FrameApp(Frame):
 
 
 window = Tk()
-window.geometry("425x500")
+window.geometry("380x520")
 window.title("MP3 Music Player")
 
 
