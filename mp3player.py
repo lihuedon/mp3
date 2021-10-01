@@ -27,32 +27,37 @@ class FrameApp(Frame):
         self.playlist = list()
         self.actual_song = 0
 
-        self.b0 = Button(self, text="ADD TO PLAYLIST", command=self.add_to_list, bg='AntiqueWhite1', width=15)
+        # Column 1
+        self.b0 = Button(self, text="ADD TO PLAYLIST", command=self.add_to_list, bg='Lavender', width=15)
         self.b0.grid(row=1, column=0, pady=8)
 
-        self.b1 = Button(self, text="PLAY SONG", command=self.play_music, bg='AntiqueWhite1', width=15)
+        self.b1 = Button(self, text="PLAY SONG", command=self.play_music, bg='Lavender', width=15)
         self.b1.grid(row=2, column=0)
 
-        self.b2 = Button(self, text="PAUSE", command=self.toggle, bg='AntiqueWhite1', width=15)
+        self.b2 = Button(self, text="PAUSE", command=self.toggle, bg='Lavender', width=15)
         self.b2.grid(row=3, column=0)
 
-        self.b3 = Button(self, text="PREVIOUS SONG", command=self.previous_song, bg='AntiqueWhite1', width=15)
+        self.b3 = Button(self, text="PREVIOUS SONG", command=self.previous_song, bg='Lavender', width=15)
         self.b3.grid(row=4, column=0)
 
-        self.b4 = Button(self, text="NEXT SONG", command=self.next_song, bg='AntiqueWhite1', width=15)
+        self.b4 = Button(self, text="NEXT SONG", command=self.next_song, bg='Lavender', width=15)
         self.b4.grid(row=5, column=0)
 
-        self.b5 = Button(self, text="STOP", command=self.stop_song, bg='AntiqueWhite1', width=15)
+        self.b5 = Button(self, text="STOP", command=self.stop_song, bg='Lavender', width=15)
         self.b5.grid(row=6, column=0)
 
-        self.b6 = Button(self, text="EXIT", command=exit_app, bg='AntiqueWhite1', width=15)
-        self.b6.grid(row=7, column=0)
+        # Column 2
+        self.b6 = Button(self, text="CLEAR PLAYLIST", command=self.clear_list, bg='Lavender', width=15)
+        self.b6.grid(row=1, column=2)
 
-        self.container_box = Frame(self)
-        self.container_box.grid(row=9, column=0, columnspan=4, padx=8, pady=8)
+        self.b7 = Button(self, text="EXIT", command=exit_app, bg='Lavender', width=15)
+        self.b7.grid(row=6, column=2)
 
         self.label1 = Label(self, fg='Black', font=('Helvetica 12 bold italic', 10), bg='white', wraplength=380)
-        self.label1.grid(sticky=('n', 's', 'w', 'e'), row=8, column=0, columnspan=4, pady=8)
+        self.label1.grid(sticky=('n', 's', 'w', 'e'), row=9, column=0, columnspan=4, pady=8)
+
+        self.container_box = Frame(self)
+        self.container_box.grid(row=10, column=0, columnspan=4, padx=8, pady=8)
 
         self.play_list = Listbox(self.container_box, font='Helvetica 10', bg='white', width=50, height=14, selectmode=SINGLE)
         self.play_list.pack(side=LEFT, fill=BOTH)
@@ -84,6 +89,18 @@ class FrameApp(Frame):
             song = EasyID3(item)
             song_data = (str(key + 1) + ' : ' + song['title'][0])
             self.play_list.insert(key, song_data)
+
+    def clear_list(self):
+        """
+        Stops music and clears the playlist
+        :return:
+        """
+        self.stop_song()
+        self.label1['text'] = " "
+        self.playlist.clear()
+        self.play_list.select_clear(0, END)
+        self.play_list.delete(0, END)  # Clear the song list box
+        self.actual_song = 0
 
     def now_playing(self):
         """
