@@ -89,6 +89,7 @@ class FrameApp(Frame):
             song = EasyID3(item)
             song_data = (str(key + 1) + ' : ' + song['title'][0])
             self.play_list.insert(key, song_data)
+        self.play_list.select_set(self.actual_song)
 
     def clear_list(self):
         """
