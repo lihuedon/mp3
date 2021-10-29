@@ -53,13 +53,17 @@ class FrameApp(Frame):
         self.b7 = Button(self, text="EXIT", command=exit_app, bg='Lavender', width=15)
         self.b7.grid(row=6, column=2)
 
+        self.label0 = Label(self, fg='Black', font=('Helvetica 12 bold italic', 10), bg='Lavender', wraplength=380)
+        self.label0.grid(sticky=('n', 's', 'w', 'e'), row=0, column=0, columnspan=4, pady=8)
+
         self.label1 = Label(self, fg='Black', font=('Helvetica 12 bold italic', 10), bg='white', wraplength=380)
         self.label1.grid(sticky=('n', 's', 'w', 'e'), row=9, column=0, columnspan=4, pady=8)
 
         self.container_box = Frame(self)
         self.container_box.grid(row=10, column=0, columnspan=4, padx=8, pady=8)
 
-        self.play_list = Listbox(self.container_box, font='Helvetica 10', bg='white', width=50, height=14, selectmode=SINGLE)
+        self.play_list = Listbox(self.container_box, font='Helvetica 10', bg='white', width=50, height=14,
+                                 selectmode=SINGLE)
         self.play_list.pack(side=LEFT, fill=BOTH)
         self.play_list.bind("<<ListboxSelect>>", self.select_song)
 
@@ -87,7 +91,11 @@ class FrameApp(Frame):
         for key, item in enumerate(self.playlist):
             # appends song to listbox
             song = EasyID3(item)
-            song_data = (str(key + 1) + ' : ' + song['title'][0])
+            print(f'SONG {song}')
+            if 'title' in song.keys():
+                song_data = (str(key + 1) + ' : ' + song['title'][0])
+            else:
+                song_data = (str(key + 1) + ' : ' + item)
             self.play_list.insert(key, song_data)
         self.play_list.select_set(self.actual_song)
 
@@ -97,6 +105,7 @@ class FrameApp(Frame):
         :return:
         """
         self.stop_song()
+        self.label0['text'] = " "
         self.label1['text'] = " "
         self.playlist.clear()
         self.play_list.select_clear(0, END)
@@ -108,11 +117,16 @@ class FrameApp(Frame):
         Makes string of current playing song data over the text box
         :return: string - current song data
         """
-        song = EasyID3(self.playlist[self.actual_song])
-        song_data = str(self.actual_song + 1) + " : " + \
-                    str(song['title'][0]) + " - " + str(song['artist'])
         self.play_list.select_clear(0, END)
         self.play_list.select_set(self.actual_song)
+        song = EasyID3(self.playlist[self.actual_song])
+        if 'title' in song.keys():
+            song_data = str(self.actual_song + 1) + " : " + \
+                        str(song['title'][0]) + " - " + str(song['artist'])
+            self.label0['text'] = str(song['album'][0])
+        else:
+            song_data = str(self.play_list.selection_get())
+            self.label0['text'] = 'ALBUM HERE'
         return song_data
 
     def play_music(self):
@@ -206,10 +220,13 @@ window = Tk()
 window.geometry("380x520")
 window.title("MP3 Music Player")
 
-
 app = FrameApp(window)
 
 while app.app_running:
     # runs mainloop of program
     app.check_music()
-    app.update()
+    try:
+        app.update()
+    except TclError:
+        # Someone closed the app using the Close 'X' instead of the Exit button
+        pass
