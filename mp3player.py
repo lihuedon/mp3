@@ -26,41 +26,58 @@ class FrameApp(Frame):
         self.stopped = False
         self.playlist = list()
         self.actual_song = 0
+        self.max_size = True
 
-        # Column 1
-        self.b0 = Button(self, text="ADD TO PLAYLIST", command=self.add_to_list, bg='Lavender', width=15)
-        self.b0.grid(row=1, column=0, pady=8)
+        # Row 1
+        self.main_box = Frame(self)
+        self.main_box.grid(row=1, column=1, columnspan=5, padx=8, pady=8)
 
-        self.b1 = Button(self, text="PLAY SONG", command=self.play_music, bg='Lavender', width=15)
-        self.b1.grid(row=2, column=0)
+        self.b1 = Button(self.main_box, text="\u25B6", command=self.play_music, bg='Lavender', width=4)
+        self.b1.grid(row=1, column=1)
 
-        self.b2 = Button(self, text="PAUSE", command=self.toggle, bg='Lavender', width=15)
-        self.b2.grid(row=3, column=0)
+        self.b2 = Button(self.main_box, text="\u25B6", command=self.toggle, bg='Lavender', width=4)
+        self.b2.grid(row=1, column=2)
 
-        self.b3 = Button(self, text="PREVIOUS SONG", command=self.previous_song, bg='Lavender', width=15)
-        self.b3.grid(row=4, column=0)
+        self.b3 = Button(self.main_box, text="|\u25C0\u25C0", command=self.previous_song, bg='Lavender', width=4)
+        self.b3.grid(row=1, column=3)
 
-        self.b4 = Button(self, text="NEXT SONG", command=self.next_song, bg='Lavender', width=15)
-        self.b4.grid(row=5, column=0)
+        self.b4 = Button(self.main_box, text="\u25B6\u25B6|", command=self.next_song, bg='Lavender', width=4)
+        self.b4.grid(row=1, column=4)
 
-        self.b5 = Button(self, text="STOP", command=self.stop_song, bg='Lavender', width=15)
-        self.b5.grid(row=6, column=0)
+        self.b5 = Button(self.main_box, text="\u25A0", command=self.stop_song, bg='Lavender', width=4)
+        self.b5.grid(row=1, column=5)
 
-        # Column 2
-        self.b6 = Button(self, text="CLEAR PLAYLIST", command=self.clear_list, bg='Lavender', width=15)
-        self.b6.grid(row=1, column=2)
+        self.l6 = Label(self.main_box, text=" ", bg='white', width=4)
+        self.l6.grid(row=1, column=6)
 
-        self.b7 = Button(self, text="EXIT", command=exit_app, bg='Lavender', width=15)
-        self.b7.grid(row=6, column=2)
+        self.b7 = Button(self.main_box, text="min", command=self.resize, bg='Lavender', width=4)
+        self.b7.grid(row=1, column=7)
 
-        self.label0 = Label(self, fg='Black', font=('Helvetica 12 bold italic', 10), bg='Lavender', wraplength=380)
-        self.label0.grid(sticky=('n', 's', 'w', 'e'), row=0, column=0, columnspan=4, pady=8)
+        self.l8 = Label(self.main_box, text=" ", bg='white', width=2)
+        self.l8.grid(row=1, column=8)
 
-        self.label1 = Label(self, fg='Black', font=('Helvetica 12 bold italic', 10), bg='white', wraplength=380)
-        self.label1.grid(sticky=('n', 's', 'w', 'e'), row=9, column=0, columnspan=4, pady=8)
+        self.b9 = Button(self.main_box, text="exit", command=exit_app, bg='Lavender', width=4)
+        self.b9.grid(row=1, column=9)
 
+        # Row 2, 3
+        self.second_box = Frame(self)
+        self.second_box.grid(row=2, column=1, columnspan=5, padx=8, pady=8)
+
+        self.song_label = Label(self.second_box, fg='Black', font=('Helvetica 12 bold italic', 10), bg='white')
+        self.song_label.grid(sticky=('n', 's', 'w', 'e'), row=0, column=1, columnspan=5, pady=8)
+
+        self.album_label = Label(self.second_box, fg='Black', font=('Helvetica 12 bold italic', 10), bg='Lavender', wraplength=380)
+        self.album_label.grid(sticky=('n', 's', 'w', 'e'), row=1, column=1, columnspan=5, pady=8)
+
+        self.b0 = Button(self.second_box, text="ADD TO PLAYLIST", command=self.add_to_list, bg='Lavender', width=15)
+        self.b0.grid(row=2, column=1, pady=8)
+
+        self.b6 = Button(self.second_box, text="CLEAR PLAYLIST", command=self.clear_list, bg='Lavender', width=15)
+        self.b6.grid(row=2, column=2)
+
+        # Row 4
         self.container_box = Frame(self)
-        self.container_box.grid(row=10, column=0, columnspan=4, padx=8, pady=8)
+        self.container_box.grid(row=10, column=1, columnspan=5, padx=8, pady=8)
 
         self.play_list = Listbox(self.container_box, font='Helvetica 10', bg='white', width=50, height=14,
                                  selectmode=SINGLE)
@@ -105,8 +122,8 @@ class FrameApp(Frame):
         :return:
         """
         self.stop_song()
-        self.label0['text'] = " "
-        self.label1['text'] = " "
+        self.album_label['text'] = " "
+        self.song_label['text'] = " "
         self.playlist.clear()
         self.play_list.select_clear(0, END)
         self.play_list.delete(0, END)  # Clear the song list box
@@ -123,10 +140,10 @@ class FrameApp(Frame):
         if 'title' in song.keys():
             song_data = str(self.actual_song + 1) + " : " + \
                         str(song['title'][0]) + " - " + str(song['artist'])
-            self.label0['text'] = str(song['album'][0])
+            self.album_label['text'] = str(song['album'][0])
         else:
             song_data = str(self.play_list.selection_get())
-            self.label0['text'] = 'ALBUM HERE'
+            self.album_label['text'] = 'ALBUM HERE'
         return song_data
 
     def play_music(self):
@@ -134,13 +151,16 @@ class FrameApp(Frame):
         Loads current song, plays it, sets event on song finish
         :return: None
         """
-        directory = self.playlist[self.actual_song]
-        pygame.mixer.music.load(directory)
-        pygame.mixer.music.play(1, 0.0)
-        pygame.mixer.music.set_endevent(self.SONG_END)
-        self.paused = False
-        self.b2.config(text='PAUSE')
-        self.label1['text'] = self.now_playing()
+        if self.play_list.size() > 0:
+
+            directory = self.playlist[self.actual_song]
+            print(directory)
+            pygame.mixer.music.load(directory)
+            pygame.mixer.music.play(1, 0.0)
+            pygame.mixer.music.set_endevent(self.SONG_END)
+            self.paused = False
+            self.b2.config(text='||')
+            self.song_label['text'] = self.now_playing()
 
     def check_music(self):
         """
@@ -160,11 +180,11 @@ class FrameApp(Frame):
         if self.paused:
             pygame.mixer.music.unpause()
             self.paused = False
-            self.b2.config(text='PAUSE')
+            self.b2.config(text='||')
         elif not self.paused:
             pygame.mixer.music.pause()
             self.paused = True
-            self.b2.config(text='RESUME')
+            self.b2.config(text='\u25B6')
 
     def get_next_song(self):
         """
@@ -211,13 +231,33 @@ class FrameApp(Frame):
         pygame.mixer.music.stop()
 
     def select_song(self, event):
+        """
+        Play song selected from playlist.
+        :param event:
+        :return:
+        """
         selection = event.widget.curselection()
         self.actual_song = selection[0]
         self.play_music()
 
+    def resize(self):
+        """
+        Toggle window size.
+        :return:
+        """
+
+        if self.max_size:
+            window.geometry("380x90")
+            self.b7.config(text='max')
+            self.max_size = False
+        else:
+            window.geometry("380x440")
+            self.b7.config(text='min')
+            self.max_size = True
+
 
 window = Tk()
-window.geometry("380x520")
+window.geometry("380x440")
 window.title("MP3 Music Player")
 
 app = FrameApp(window)
