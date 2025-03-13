@@ -5,6 +5,8 @@ from tkinter import *
 
 pygame.init()
 
+MAX_SIZE = "500x440"
+MIN_SIZE = "500x120"
 
 def exit_app():
     """
@@ -247,17 +249,17 @@ class FrameApp(Frame):
         """
 
         if self.max_size:
-            window.geometry("380x90")
+            window.geometry(MIN_SIZE)
             self.b7.config(text='max')
             self.max_size = False
         else:
-            window.geometry("380x440")
+            window.geometry(MAX_SIZE)
             self.b7.config(text='min')
             self.max_size = True
 
 
 window = Tk()
-window.geometry("380x440")
+window.geometry(MAX_SIZE)
 window.title("MP3 Music Player")
 
 app = FrameApp(window)
