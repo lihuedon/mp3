@@ -260,6 +260,7 @@ class FrameApp(Frame):
 
 window = Tk()
 window.geometry(MAX_SIZE)
+window.config(padx=10,pady=10)
 window.title("MP3 Music Player")
 
 app = FrameApp(window)
