@@ -2,6 +2,7 @@ from mutagen.easyid3 import EasyID3
 import pygame
 from tkinter.filedialog import *
 from tkinter import *
+import tkinter as tk
 
 pygame.init()
 
@@ -264,6 +265,11 @@ window.config(padx=10,pady=10)
 window.title("MP3 Music Player")
 
 app = FrameApp(window)
+try:
+    icon_img = tk.PhotoImage(file="~/PycharmProjects/mp3/mp3.png")
+    window.iconphoto(False, icon_img)
+except tk.TclError:
+    print("mp3.png not found. Using default icon.")
 
 while app.app_running:
     # runs mainloop of program
