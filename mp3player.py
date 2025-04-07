@@ -96,15 +96,22 @@ class FrameApp(Frame):
         # set event to not predefined value in pygame
         self.SONG_END = pygame.USEREVENT + 1
 
-    def add_to_list(self):
+    def add_to_list(self, directory=()):
         """
         Opens window to browse data on disk and adds selected songs to play list
         :return: None
         """
-        directory = askopenfilenames()
+        if not directory:
+            # Set the initial directory
+            initial_directory = "~/Music"
+
+            # Open the file dialog
+            directory = askopenfilenames(initialdir=initial_directory, title="Select Files")
+        print(directory)
         # appends song directory on disk to playlist in memory
         for song_dir in directory:
             self.playlist.append(song_dir)
+            # print(f"THIS " + song_dir)
 
         self.play_list.delete(0, END)  # Clear the song list box
 
@@ -265,6 +272,7 @@ window.config(padx=10,pady=10)
 window.title("MP3 Music Player")
 
 app = FrameApp(window)
+# app.add_to_list(('/home/pi/Music/Yessongs [Live][Disc 1]/1-01 Opening (Excerpt From Firebird.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-02 Siberian Khatru.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-03 Heart Of The Sunrise.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-04 Perpetual Change.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-05 And You And I.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-06 Mood For A Day.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-08 Roundabout.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-01 All Good People.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-02 Long Distance Runaround.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-03 The Fish.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-04 Close To The Edge.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-05 Yours Is No Disgrace.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-06 Starship Trooper.mp3'))
 try:
     icon_img = tk.PhotoImage(file="~/PycharmProjects/mp3/mp3.png")
     window.iconphoto(False, icon_img)
