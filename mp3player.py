@@ -26,7 +26,7 @@ class FrameApp(Frame):
         self.app_running = True
         self.grid()
         self.paused = False
-        self.stopped = False
+        self.stopped = True
         self.playlist = list()
         self.actual_song = 0
         self.max_size = True
@@ -34,9 +34,6 @@ class FrameApp(Frame):
         # Row 1
         self.main_box = Frame(self)
         self.main_box.grid(row=1, column=1, columnspan=5, padx=8, pady=8)
-
-        self.b1 = Button(self.main_box, text="\u25B6", command=self.play_music, bg='Lavender', width=4)
-        self.b1.grid(row=1, column=1)
 
         self.b2 = Button(self.main_box, text="\u25B6", command=self.toggle, bg='Lavender', width=4)
         self.b2.grid(row=1, column=2)
@@ -187,7 +184,10 @@ class FrameApp(Frame):
         Toggles current song
         :return: None
         """
-        if self.paused:
+        if self.stopped:
+            self.play_music()
+            self.stopped = False
+        elif self.paused:
             pygame.mixer.music.unpause()
             self.paused = False
             self.b2.config(text='||')
@@ -272,7 +272,7 @@ window.config(padx=10,pady=10)
 window.title("MP3 Music Player")
 
 app = FrameApp(window)
-# app.add_to_list(('/home/pi/Music/Yessongs [Live][Disc 1]/1-01 Opening (Excerpt From Firebird.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-02 Siberian Khatru.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-03 Heart Of The Sunrise.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-04 Perpetual Change.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-05 And You And I.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-06 Mood For A Day.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-08 Roundabout.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-01 All Good People.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-02 Long Distance Runaround.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-03 The Fish.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-04 Close To The Edge.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-05 Yours Is No Disgrace.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-06 Starship Trooper.mp3'))
+app.add_to_list(('/home/pi/Music/Yessongs [Live][Disc 1]/1-01 Opening (Excerpt From Firebird.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-02 Siberian Khatru.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-03 Heart Of The Sunrise.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-04 Perpetual Change.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-05 And You And I.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-06 Mood For A Day.mp3', '/home/pi/Music/Yessongs [Live][Disc 1]/1-08 Roundabout.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-01 All Good People.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-02 Long Distance Runaround.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-03 The Fish.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-04 Close To The Edge.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-05 Yours Is No Disgrace.mp3', '/home/pi/Music/Yessongs [Live][Disc 2]/2-06 Starship Trooper.mp3'))
 try:
     icon_img = tk.PhotoImage(file="~/PycharmProjects/mp3/mp3.png")
     window.iconphoto(False, icon_img)
