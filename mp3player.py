@@ -187,6 +187,8 @@ class FrameApp(Frame):
         if self.stopped:
             self.play_music()
             self.stopped = False
+            self.paused = False
+            self.b2.config(text='||')
         elif self.paused:
             pygame.mixer.music.unpause()
             self.paused = False
