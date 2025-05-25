@@ -178,6 +178,8 @@ class FrameApp(Frame):
         for event in pygame.event.get():
             if event.type == self.SONG_END and not self.stopped:
                 self.next_song()
+                self.play_list.select_clear(0, END)
+                self.play_list.select_set(self.actual_song)
 
     def toggle(self):
         """
